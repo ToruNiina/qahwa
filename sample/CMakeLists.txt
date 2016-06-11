@@ -10,5 +10,9 @@ include_directories(${COFFEE_MILL_INCLUDE_DIRECTORY})
 include_directories(${COFFEE_MILL_LIBRARY_INCLUDE_DIRECTORY})
 
 add_executable(sample Sample.cpp)
+set_target_properties(sample
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/sample"
+    )
 target_link_libraries(sample
     coffeemill)
