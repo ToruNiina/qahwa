@@ -1,0 +1,4 @@
+       2 !NATOM
+       1  DC     1  DC  DS    C     0.000000        1.0000           0
+       2  DC     1  DC  DB    C     0.000000        1.0000           0
+       0 !NBOND: bonds
