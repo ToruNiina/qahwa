@@ -1,0 +1,7 @@
+*.dat
+*.log
+*.dcd
+
+bin/*
+build/*
+!.gitkeep
