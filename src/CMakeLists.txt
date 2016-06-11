@@ -2,7 +2,7 @@ set(CPP_FILES
     Qahwa.cpp
     )
 
-set(QAHWA_INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIRECTORY}/include")
+set(QAHWA_INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIR}/include")
 set(COFFEE_MILL_INCLUDE_DIRECTORY
     "${QAHWA_INCLUDE_DIRECTORY}/coffeemill/include")
 
@@ -12,4 +12,5 @@ include_directories(${COFFEE_MILL_INCLUDE_DIRECTORY})
 
 add_executable(qahwa ${CPP_FILES})
 target_link_libraries(qahwa
-    "${QAHWA_INCLUDE_DIRECTORY}/coffeemill/lib/libcoffeemill.a")
+    coffeemill)
+#     "${QAHWA_INCLUDE_DIRECTORY}/coffeemill/lib/libcoffeemill.a")
