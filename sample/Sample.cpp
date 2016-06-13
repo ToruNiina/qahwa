@@ -34,11 +34,11 @@ int main(int argc, char *argv[])
     system.ene = perturb.energy(system.pos) + potential.energy(system.pos);
 
     DCDData data;
-    data.nset() = 10000;
+    data.nset() = 100001;
     data.istart() = 0;
     data.nstep_save() = 1;
-    data.nstep() = 10000;
-    data.nunit() = 10000;
+    data.nstep() = 100000;
+    data.nunit() = 1;
     data.verCHARMM() = 24;
     data.nparticle() = 2;
     data.delta_t() = 0.1;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     data.push_header("========================== Qahwa sample dcd ");
     data.traj().push_back(make_snapshot(system));
 
-    for(std::size_t tstep = 0; tstep < 10000; ++tstep)
+    for(std::size_t tstep = 0; tstep < 100000; ++tstep)
     {
         while(true)
         {
