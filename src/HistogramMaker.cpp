@@ -32,7 +32,7 @@ std::pair<double, double> HistogramMaker::find_range(
             range_end = crd;
     }
 
-    return std::make_pair(range_begin, range_end);
+    return std::make_pair(range_begin, range_end + ((range_end - range_begin) * 0.01));
 }
 
 }
