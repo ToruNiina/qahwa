@@ -43,11 +43,11 @@ class Histogram
 
     value_type  at(double coord) const
     {
-        if(coord < this->begin_) return 0e0;
-        if(coord > this->end_) return 0e0;
+        if(coord < this->range_begin_) return 0e0;
+        if(coord > this->range_end_) return 0e0;
 
-        const double dx  = (this->end_ - this->begin_) / bins_;
-        const double pos = coord - this->begin_;
+        const double dx  = (this->range_end_ - this->range_begin_) / bins_;
+        const double pos = coord - this->range_begin_;
         const std::size_t index = static_cast<std::size_t>(pos / dx);
 
         return values_.at(index);
@@ -55,13 +55,13 @@ class Histogram
 
     value_type& at(double coord)
     {
-        if(coord < this->begin_)
+        if(coord < this->range_begin_)
            throw std::out_of_range("histgram out of range");
-        if(coord > this->end_)
+        if(coord > this->range_end_)
            throw std::out_of_range("histgram out of range");
 
-        const double dx  = (this->end_ - this->begin_) / bins_;
-        const double pos = coord - this->begin_;
+        const double dx  = (this->range_end_ - this->range_begin_) / bins_;
+        const double pos = coord - this->range_begin_;
         const std::size_t index = static_cast<std::size_t>(pos / dx);
 
         return values_.at(index);
@@ -96,6 +96,7 @@ std::ostream& operator<<(std::ostream& os, const Histogram<T_val>& hist)
     for(auto iter = hist.cbegin(); iter != hist.cend(); ++iter)
     {
         os << beg + dx * index << " " << *iter << std::endl;
+        ++index;
     }
 
     return os;
