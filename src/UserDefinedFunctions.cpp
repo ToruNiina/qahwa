@@ -11,10 +11,9 @@ double PerturbingPotential::operator()(const SnapShot& snapshot) const
 }
 
 // this is for example. distance from origin.
-template<>
-double ReactionCoordinate<double>::operator()(const SnapShot& snapshot) const
+double ReactionCoordinate::operator()(const SnapShot& snapshot) const
 {
-    return length(snapshot.at(1));
+    return length(snapshot.at(0) - snapshot.at(1));
 }
 
 

@@ -48,22 +48,14 @@ class PerturbingPotential
 
 /*!
  *  @brief functor that returns Reaction Coordinate.
- *  @tparam T_coord type of Reaction Coordinate. normally double.
- *
- *  This accepts ShapShot and returns Reaction Coordinate. You can output
- *
  */
-template<typename T_coord>
 class ReactionCoordinate
 {
-  public:
-    using coordinate_type = T_coord;
-
   public:
     ReactionCoordinate() = default;
     ~ReactionCoordinate() = default;
 
-    coordinate_type operator()(const SnapShot& snapshot) const;
+    double operator()(const SnapShot& snapshot) const;
 };
 
 
