@@ -1,4 +1,4 @@
-#include "UserDefinedFunction.hpp"
+#include "UserDefinedFunctions.hpp"
 
 namespace qahwa
 {
@@ -7,14 +7,14 @@ namespace qahwa
 double PerturbingPotential::operator()(const SnapShot& snapshot) const
 {
     return this->coefficient_ *
-           len_square(snapshot[this->index_] - this->anchored_position_);
+           len_square(snapshot.at(this->index_) - this->anchored_position_);
 }
 
 // this is for example. distance from origin.
 template<>
 double ReactionCoordinate<double>::operator()(const SnapShot& snapshot) const
 {
-    return length(snapshot[1]);
+    return length(snapshot.at(1));
 }
 
 
