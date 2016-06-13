@@ -1,5 +1,8 @@
 set(CPP_FILES
     Qahwa.cpp
+    HistogramMaker.cpp
+    ProbabilityDensityFunction.cpp
+    UserDefinedFunctions.cpp
     )
 
 set(QAHWA_INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIR}/includes")
