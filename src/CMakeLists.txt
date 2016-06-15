@@ -3,6 +3,7 @@ set(CPP_FILES
     HistogramMaker.cpp
     ProbabilityDensityFunction.cpp
     UserDefinedFunctions.cpp
+    UnbiasSolver.cpp
     )
 
 set(QAHWA_INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIR}/includes")
