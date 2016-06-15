@@ -28,6 +28,7 @@ class PerturbingPotential
 
     double energy(const double pos) const
     {
+//         return 0;
         return coef_ * (pos - anch_) * (pos - anch_);
     }
 
@@ -42,7 +43,9 @@ class TruePotential
 {
   public:
 
-    TruePotential(){}
+    TruePotential()
+        : ke(10.0), q1(-1.0), q2(1.0)
+    {}
 
     double energy(const double pos) const
     {
@@ -51,9 +54,9 @@ class TruePotential
 
   private:
 
-    const double ke = 1e0;
-    const double q1 = -1.0;
-    const double q2 = 1.0;
+    const double ke;
+    const double q1;
+    const double q2;
 };
 
 class RandomNumberGenerator
@@ -89,7 +92,7 @@ class Metropolis
         if(dE <= 0.0)
             return true;
         else
-            return rng.uniform(0.0, 1.0) < std::exp(-1.0 * this->beta_ * dE);
+            return (rng.uniform(0.0, 1.0) < std::exp(-1.0 * this->beta_ * dE));
     }
 
     double  beta() const {return beta_;}
