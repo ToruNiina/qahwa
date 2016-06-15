@@ -6,7 +6,6 @@
 namespace qahwa
 {
 
-// one-dimentional only...
 class HistogramMaker
 {
   public:
@@ -21,10 +20,13 @@ class HistogramMaker
     ~HistogramMaker() = default;
 
     std::pair<double, double> find_range(const Trajectory& traj,
-        const ReactionCoordinate<double>& reaction_coord) const;
+                       const ReactionCoordinate& reaction_coord) const;
 
     histogram_type make_histogram(const Trajectory& traj,
-        const ReactionCoordinate<double>& reaction_coord) const;
+                       const ReactionCoordinate& reaction_coord) const;
+
+    Histogram<double> make_prob_dens_func(const Trajectory& traj,
+                       const ReactionCoordinate& reaction_coord) const;
 
     void set_range(const std::pair<double, double>& range)
     {
