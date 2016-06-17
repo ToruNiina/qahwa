@@ -4,6 +4,7 @@ set(CPP_FILES
     ProbabilityDensityFunction.cpp
     UserDefinedFunctions.cpp
     UnbiasSolver.cpp
+    WhamSolver.cpp
     )
 
 set(QAHWA_INCLUDE_DIRECTORY "${PROJECT_SOURCE_DIR}/includes")
