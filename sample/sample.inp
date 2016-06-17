@@ -1,0 +1,84 @@
+# to make histogram
+[histogram]
+dcdfiles   = [
+    "result/sample_dist_5.0_coef_10.0.dcd",
+    "result/sample_dist_5.5_coef_10.0.dcd",
+    "result/sample_dist_6.0_coef_10.0.dcd",
+    "result/sample_dist_6.5_coef_10.0.dcd",
+    "result/sample_dist_7.0_coef_10.0.dcd",
+    "result/sample_dist_7.5_coef_10.0.dcd",
+    "result/sample_dist_8.0_coef_10.0.dcd",
+    "result/sample_dist_8.5_coef_10.0.dcd",
+    "result/sample_dist_9.0_coef_10.0.dcd",
+    "result/sample_dist_9.5_coef_10.0.dcd",
+    "result/sample_dist_10.0_coef_10.0.dcd"
+] # required
+bins   = 100         # default is 100
+output = "result/histogram" # required
+
+
+# to make unbiased probability distribution
+[unbiased]
+dcdfiles = [
+    "result/sample_dist_5.0_coef_10.0.dcd",
+    "result/sample_dist_5.5_coef_10.0.dcd",
+    "result/sample_dist_6.0_coef_10.0.dcd",
+    "result/sample_dist_6.5_coef_10.0.dcd",
+    "result/sample_dist_7.0_coef_10.0.dcd",
+    "result/sample_dist_7.5_coef_10.0.dcd",
+    "result/sample_dist_8.0_coef_10.0.dcd",
+    "result/sample_dist_8.5_coef_10.0.dcd",
+    "result/sample_dist_9.0_coef_10.0.dcd",
+    "result/sample_dist_9.5_coef_10.0.dcd",
+    "result/sample_dist_10.0_coef_10.0.dcd"
+] # required
+
+parameters = [
+    [1, 10.0, 5.0, 0.0, 0.0],
+    [1, 10.0, 5.5, 0.0, 0.0],
+    [1, 10.0, 6.0, 0.0, 0.0],
+    [1, 10.0, 6.5, 0.0, 0.0],
+    [1, 10.0, 7.0, 0.0, 0.0],
+    [1, 10.0, 7.5, 0.0, 0.0],
+    [1, 10.0, 8.0, 0.0, 0.0],
+    [1, 10.0, 8.5, 0.0, 0.0],
+    [1, 10.0, 9.0, 0.0, 0.0],
+    [1, 10.0, 9.5, 0.0, 0.0],
+    [1, 10.0, 10.0, 0.0, 0.0]
+] # required (for anchor)
+
+bins        = 100        # default is 100
+temperature = 300.0      # default is 300
+output      = "result/unbiased" # required
+
+# to run wham
+[wham]
+dcdfiles   = [
+    "result/sample_dist_5.0_coef_10.0.dcd",
+    "result/sample_dist_5.5_coef_10.0.dcd",
+    "result/sample_dist_6.0_coef_10.0.dcd",
+    "result/sample_dist_6.5_coef_10.0.dcd",
+    "result/sample_dist_7.0_coef_10.0.dcd",
+    "result/sample_dist_7.5_coef_10.0.dcd",
+    "result/sample_dist_8.0_coef_10.0.dcd",
+    "result/sample_dist_8.5_coef_10.0.dcd",
+    "result/sample_dist_9.0_coef_10.0.dcd",
+    "result/sample_dist_9.5_coef_10.0.dcd",
+    "result/sample_dist_10.0_coef_10.0.dcd"
+]
+parameters = [
+    [1, 10.0, 5.0, 0.0, 0.0],
+    [1, 10.0, 5.5, 0.0, 0.0],
+    [1, 10.0, 6.0, 0.0, 0.0],
+    [1, 10.0, 6.5, 0.0, 0.0],
+    [1, 10.0, 7.0, 0.0, 0.0],
+    [1, 10.0, 7.5, 0.0, 0.0],
+    [1, 10.0, 8.0, 0.0, 0.0],
+    [1, 10.0, 8.5, 0.0, 0.0],
+    [1, 10.0, 9.0, 0.0, 0.0],
+    [1, 10.0, 9.5, 0.0, 0.0],
+    [1, 10.0, 10.0, 0.0, 0.0]
+]
+bins        = 100   # default is 100
+temperature = 300.0 # default is 300
+output     = "result/wham"
