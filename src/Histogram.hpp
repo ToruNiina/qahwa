@@ -11,20 +11,23 @@ class Histogram
 {
   public:
 
-    using size_type      = std::size_t;
-    using index_type     = size_type;
-    using value_type     = T_value;
-    using container_type = std::vector<T_value>;
-    using iterator       = typename container_type::iterator;
-    using const_iterator = typename container_type::const_iterator;
+    using size_type       = std::size_t;
+    using index_type      = size_type;
+    using value_type      = T_value;
+    using container_type  = std::vector<T_value>;
+    using coordinate_type = double;
+    using range_type      = std::pair<coordinate_type, coordinate_type>;
+    using iterator        = typename container_type::iterator;
+    using const_iterator  = typename container_type::const_iterator;
 
   public:
+
     Histogram(){}
     Histogram(const std::size_t bin)
-        : bins_(bin), values_(bin)
+        : bins_(bin), values_(bin, 0)
     {}
     Histogram(const std::size_t bin, const double begin, const double end)
-        : bins_(bin), range_begin_(begin), range_end_(end), values_(bin)
+        : bins_(bin), range_(begin, end), values_(bin, 0)
     {}
     ~Histogram(){}
 
@@ -41,36 +44,40 @@ class Histogram
     const_iterator cbegin() const {return values_.cbegin();}
     const_iterator cend()   const {return values_.cend();}
 
-    value_type  at(double coord) const
+    value_type at(coordinate_type coord) const
     {
-        if(coord < this->range_begin_) return 0e0;
-        if(coord > this->range_end_) return 0e0;
+        if(coord < this->range_.first)  return 0e0;
+        if(coord > this->range_.second) return 0e0;
 
-        const double dx  = (this->range_end_ - this->range_begin_) / bins_;
-        const double pos = coord - this->range_begin_;
+        const double dx  = (this->range_.second - this->range_.first) / bins_;
+        const double pos = coord - this->range_.first;
         const std::size_t index = static_cast<std::size_t>(pos / dx);
 
         return values_.at(index);
     }
 
-    value_type& at(double coord)
+    value_type& at(coordinate_type coord)
     {
-        if(coord < this->range_begin_)
-           throw std::out_of_range("histgram out of range");
-        if(coord > this->range_end_)
-           throw std::out_of_range("histgram out of range");
+        if(coord < this->range_.first)
+           throw std::out_of_range("histogram out of range");
+        if(coord > this->range_.second)
+           throw std::out_of_range("histogram out of range");
 
-        const double dx  = (this->range_end_ - this->range_begin_) / bins_;
-        const double pos = coord - this->range_begin_;
+        const double dx  = (this->range_.second - this->range_.first) / bins_;
+        const double pos = coord - this->range_.first;
         const std::size_t index = static_cast<std::size_t>(pos / dx);
 
         return values_.at(index);
     }
 
-    double       range_begin() const {return range_begin_;}
-    double&      range_begin()       {return range_begin_;}
-    double       range_end()   const {return range_end_;}
-    double&      range_end()         {return range_end_;}
+    range_type   range() const {return range_;}
+    range_type&  range()       {return range_;}
+
+    coordinate_type   range_begin() const {return range_.first;}
+    coordinate_type&  range_begin()       {return range_.first;}
+    coordinate_type   range_end()   const {return range_.second;}
+    coordinate_type&  range_end()         {return range_.second;}
+
     std::size_t  bins()  const {return bins_;}
     std::size_t& bins()        {return bins_;}
     const container_type& values() const {return values_;}
@@ -79,8 +86,7 @@ class Histogram
   private:
 
     std::size_t bins_  = 0;
-    double      range_begin_ = 0e0;
-    double      range_end_   = 0e0;
+    range_type  range_ = {0.0, 0.0};
     container_type values_;
 };
 
@@ -88,8 +94,8 @@ template<typename T_val>
 std::ostream& operator<<(std::ostream& os, const Histogram<T_val>& hist)
 {
     os << "reaction-coord  value" << std::endl;
-    const double beg = hist.range_begin();
-    const double end = hist.range_end();
+    const double beg = hist.range().first;
+    const double end = hist.range().second;
     const double dx  = (end - beg) / hist.bins();
 
     std::size_t index = 0;

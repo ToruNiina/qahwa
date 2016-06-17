@@ -10,17 +10,18 @@ class HistogramMaker
 {
   public:
     using histogram_type = Histogram<std::size_t>;
+    using range_type     = histogram_type::range_type;
 
   public:
     HistogramMaker(){}
     HistogramMaker(const std::size_t bins): bins_(bins){}
     HistogramMaker(const std::size_t bins, const double begin, const double end)
-        : bins_(bins), begin_(begin), end_(end)
+        : bins_(bins), range_(begin, end)
     {}
     ~HistogramMaker() = default;
 
-    std::pair<double, double> find_range(const Trajectory& traj,
-                       const ReactionCoordinate& reaction_coord) const;
+    range_type find_range(const Trajectory& traj,
+                          const ReactionCoordinate& reaction_coord) const;
 
     histogram_type make_histogram(const Trajectory& traj,
                        const ReactionCoordinate& reaction_coord) const;
@@ -28,24 +29,18 @@ class HistogramMaker
     Histogram<double> make_prob_dens_func(const Trajectory& traj,
                        const ReactionCoordinate& reaction_coord) const;
 
-    void set_range(const std::pair<double, double>& range)
-    {
-        this->begin_ = range.first;
-        this->end_ = range.second;
-        return;
-    }
+    void set_range(const range_type& range){range_ = range;}
 
-    std::size_t  bin() const {return bins_;}
-    std::size_t& bin()       {return bins_;}
-    double  range_begin() const {return begin_;}
-    double& range_begin()       {return begin_;}
-    double  range_end() const {return end_;}
-    double& range_end()       {return end_;}
+    std::size_t  bin()    const {return bins_;}
+    std::size_t& bin()          {return bins_;}
+    double  range_begin() const {return range_.first;}
+    double& range_begin()       {return range_.first;}
+    double  range_end()   const {return range_.second;}
+    double& range_end()         {return range_.second;}
 
   private:
     std::size_t bins_  = 100;
-    double      begin_ = 0e0;
-    double      end_   = 0e0;
+    range_type  range_ = {0.0, 0.0};
 };
 
 

@@ -8,7 +8,7 @@ Histogram<std::size_t> HistogramMaker::make_histogram(
         const Trajectory& traj,
         const ReactionCoordinate& reaction_coord) const
 {
-    histogram_type hist(this->bins_, this->begin_, this->end_);
+    histogram_type hist(this->bins_, this->range_.first, this->range_.second);
 
     for(auto iter = traj.cbegin(); iter != traj.cend(); ++iter)
         ++(hist.at(reaction_coord(*iter)));
@@ -20,7 +20,7 @@ Histogram<double> HistogramMaker::make_prob_dens_func(
         const Trajectory& traj,
         const ReactionCoordinate& reaction_coord) const
 {
-    Histogram<double> pdf(this->bins_, this->begin_, this->end_);
+    Histogram<double> pdf(this->bins_, this->range_.first, this->range_.second);
 
     const double p_min = 1.0 / traj.size();
     for(auto iter = traj.cbegin(); iter != traj.cend(); ++iter)
@@ -29,7 +29,7 @@ Histogram<double> HistogramMaker::make_prob_dens_func(
     return pdf;
 }
 
-std::pair<double, double> HistogramMaker::find_range(
+HistogramMaker::range_type HistogramMaker::find_range(
         const Trajectory& traj,
         const ReactionCoordinate& reaction_coord) const
 {
