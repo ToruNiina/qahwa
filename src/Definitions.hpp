@@ -16,6 +16,7 @@ namespace qahwa
     using InputFileReader = coffeemill::InputFileReader;
 
     constexpr static double kB = 1.986231313e-3; // kcal/mol/K
+    constexpr static double tolerance = 1e-8;
     struct Settings
     {
         double      temperature;
