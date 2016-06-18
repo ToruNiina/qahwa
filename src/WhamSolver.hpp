@@ -36,6 +36,19 @@ class WhamSolver
                 const std::vector<window_type>& windows,
                 const ReactionCoordinate& rctcrd) const;
 
+    Histogram<double>
+    make_pmf(const ProbabilityDensityFunction& pdf) const
+    {
+        Histogram<double> pmf(pdf.bins(), pdf.range_begin(), pdf.range_end());
+        auto potential = pmf.begin();
+        for(auto iter = pdf.cbegin(); iter != pdf.cend(); ++iter)
+        {
+            *potential = -1.0 * std::log(*iter) / this->beta_;
+            ++potential;
+        }
+        return pmf;
+    }
+
     double  beta() const {return this->beta_;}
     double& beta()       {return this->beta_;}
 
