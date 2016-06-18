@@ -12,8 +12,10 @@ int main(int argc, char *argv[])
 
     const double anchor_dist = std::stod(std::string(argv[1]));
     const double anchor_coef = std::stod(std::string(argv[2]));
-    const std::string output_name("sample_dist_" + std::to_string(anchor_dist) +
-                                  "_coef_" + std::to_string(anchor_coef) + ".dcd");
+    const std::string output_name("sample_dist_" + std::string(argv[1]) +
+                                  "_coef_" + std::string(argv[2]) + ".dcd");
+    std::cout << "distance = "    << anchor_dist << std::endl;
+    std::cout << "coefficient = " << anchor_coef << std::endl;
     std::cout << "output = " << output_name << std::endl;
 
     const PerturbingPotential perturb(anchor_coef, anchor_dist);
