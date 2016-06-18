@@ -1,7 +1,7 @@
 Qahwa
 ====
 
-for WHAM. this is in development.
+command line tools for doing Umbrella Sampling & WHAM.
 
 ## Build
 
@@ -23,12 +23,12 @@ then use CMake.
 
 ### Reaction Coordinate and PerturbingPotential
 
-At first, you must write very short c++ code to calculate
+To use Qahwa, you must write very short c++ code to calculate your
 Reaction Coordinate and Perturbing Potential from SnapShot.
 
-the class SnapShot is an alias of std::vector<Vector3d>, and Vector3d is
+the class 'SnapShot' is an alias of std::vector<Vector3d>, and Vector3d is
 normal 3-dimentional vector defined in AX library.
-And std::vector is a kind of dynamic array.
+std::vector is a kind of dynamic array.
 
 You can access the position of i-th particle like this way.
 
@@ -59,15 +59,13 @@ See __./src/UserDefinedFunction.hpp__ and __./src/UserDefinedFunction.cpp__
 
 Qahwa has several modes.
 
-| mode             | arguments | description                          |
-|:-----------------|:----------|:-------------------------------------|
-| --make-histogram | dcd file  | make histogram from one dcd file     |
-| --make-histogram | toml file | make histogram from several dcd file |
-| --make-unbiased  | toml file | make unbiased histogram of the trajs |
-| --wham           | toml file | run wham and output weighted unbiased histogram of the trajs |
-
-All the modes are independent.
-For example, --wham mode does not depend on the result of --make-unbiased.
+| mode             | input file | description                                                         |
+|:-----------------|:-----------|:--------------------------------------------------------------------|
+| --make-histogram | dcd file   | make histogram from one dcd file(all the values are set as default) |
+| --make-histogram | toml file  | make histogram from several dcd file                                |
+| --make-unbiased  | toml file  | make unbiased histogram of each trajectories (not connected)        |
+| --make-pmf       | toml file  | make potential of mean force from probability density function      |
+| --wham           | toml file  | run wham and output weighted unbiased histogram of the trajs        |
 
 To use qahwa, run this way.
 
@@ -81,29 +79,35 @@ The typical example is described below.
 
     [histogram]
     dcdfiles   = ["traj1.dcd", "traj2.dcd", "traj3.dcd"]
-    output     = "histogram.dat"
+    output     = "histogram"
 
     [unbiased]
     dcdfiles   = ["traj1.dcd", "traj2.dcd", "traj3.dcd"]
     parameters = [
-        [1.0, 5.0, 0.0, 0.0],
-        [1.0, 5.5, 0.0, 0.0],
-        [1.0, 6.0, 0.0, 0.0]
+        [1, 1.0, 5.0, 0.0, 0.0],
+        [1, 1.0, 5.5, 0.0, 0.0],
+        [1, 1.0, 6.0, 0.0, 0.0]
     ]
-    output     = "unbiased.dat"
+    output     = "unbiased"
 
     [wham]
-    dcdfiles   = ["traj1.dcd", "traj2.dcd", "traj3.dcd"]
+    dcdfiles   = ["traj1.dcd", "traj2.dcd", "traj3.dcd"] # required
     parameters = [
-        [1.0, 5.0, 0.0, 0.0],
-        [1.0, 5.5, 0.0, 0.0],
-        [1.0, 6.0, 0.0, 0.0]
-    ]
-    output     = "wham.dat"
+        [1, 1.0, 5.0, 0.0, 0.0],
+        [1, 1.0, 5.5, 0.0, 0.0],
+        [1, 1.0, 6.0, 0.0, 0.0]
+    ] # required
+    bins        = 200    # default is 100.
+    temperature = 300.0  # default is 300.0
+    output      = "wham" # required
 
-"dcdfiles" is the list of filenames. "parameters" is the list of parameters, and
-a parameter is described as list of floating-point number.
-As default, the first element is the coefficient of anchor.
+"dcdfiles" is the list of "./path/to/filename"s.
+
+"parameters" is the list of parameters, and
+a parameter is described as a list of floating-point number.
+As default, the first element is index of anchored particle
+(though it is float...it is a problem)
+and the second element is the coefficient of anchor.
 And the last 3 element is anchor position(3d-vector).
 "output" is a name of the file to output.
 
@@ -113,7 +117,23 @@ Qahwa with option --make-unbiased, [histogram] and [wham] tables are ignored.
 Because of my not implementing toml array\_of\_table feature,
 the input format is a bit ugly and uneasy to read.
 After I implementing more powerful toml parser,
-the format will be changed as more elegant(for example, use array-of-table).
+the format will be changed as more elegant.
+for example, like this.
+
+    [wham]
+    dcdfiles = ["traj1.dcd", "traj2.dcd", ...]
+
+    [[wham.parameters]]
+    index = 1
+    coefficient = 1.0
+    position = [5.0, 0.0, 0.0]
+
+    [[wham.parameters]]
+    index = 1
+    coefficient = 1.0
+    position = [6.0, 0.0, 0.0]
+
+    ...
 
 ## Licensing terms
 
