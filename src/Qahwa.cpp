@@ -205,8 +205,18 @@ int main(int argc, char *argv[])
                 windows.push_back(std::make_pair(std::move(trajectory), perturb));
             }
  
-            std::cerr << "trajectory reading end. start solving" << std::endl;
-            auto parameter = solver.solve(windows);
+            std::vector<double> parameter;
+            try
+            {
+                parameter =
+                    input.get_as_list<double>(input.at("wham","free_energy"));
+                std::cerr << "free energy parameter is set as input file." << std::endl;
+            }
+            catch(std::exception& exp)
+            {
+                std::cerr << "trajectory reading end. start solving" << std::endl;
+                parameter = solver.solve(windows);
+            }
 
             std::cout << "parameter solved" << std::endl;
             for(auto iter = parameter.cbegin(); iter != parameter.cend(); ++iter)
