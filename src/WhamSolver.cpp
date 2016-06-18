@@ -1,35 +1,98 @@
 #include "WhamSolver.hpp"
+#include <iomanip>
 
 namespace qahwa
 {
 
+/* solve this for F self-consistently.
+ *
+ * win  = windows.size();
+ * step = windows.at(i).first.size();
+ * W is perturbing potential
+ * F is exp(beta f)
+ *
+ * for l = {0 to win}
+ *    1                  /               /                 exp[-beta * W_l(R_ij)]             \ \
+ *  ----- = sum_{i}^{win}| sum_{j}^{step}| -------------------------------------------------- | |
+ *   F_l                 \               \  sum_{k}^{win}(n_k * exp[-beta * W_k(R_ij)] * F_k) / /
+ *
+ *  the value of exp[-beta * W_l(R_ij)] is constant through the iteration, 
+ *  so cash_expW stores this value to solve fast.
+ *  cash_expW[l][i][j] = exp[-beta * W_l(R_ij)];
+ *  ==> cash_expW[win][win][step]
+ */
+
 std::vector<double> WhamSolver::solve(
         const std::vector<window_type>& windows) const
 {
-    std::vector<double> expfs_prev(windows.size(), 0.5);
+    const std::size_t win_size   = windows.size();
+    const double      minus_beta = -1.0 * this->beta_;
+    std::vector<double> expfs_prev(win_size, 1.0);
 
+    // make cash
+    std::vector<std::vector<std::vector<double>>> cash_expW(
+            win_size, std::vector<std::vector<double>>(win_size));
+
+    for(std::size_t l = 0; l < win_size; ++l)
+    {
+        const PerturbingPotential& W_l = windows.at(l).second;
+        for(std::size_t i = 0; i < win_size; ++i)
+        {
+            (cash_expW.at(l).at(i)).resize(windows.at(i).first.size());
+            for(std::size_t j = 0; j < windows.at(i).first.size(); ++j)
+            {
+                cash_expW.at(l).at(i).at(j) = 
+                    std::exp(minus_beta * W_l(windows.at(i).first.at(j)));
+            }
+        }
+    }
+    // end
+
+    std::size_t iteration_times = 0;
     while(true)
     {
         std::vector<double> expfs(windows.size(), 0.0);
         auto expf = expfs.begin();
-        for(auto iter = windows.cbegin(); iter != windows.cend(); ++iter)
+        for(std::size_t l = 0; l < win_size; ++l)
         {
-            for(auto win = windows.cbegin(); win != windows.cend(); ++win)
+            for(std::size_t i = 0; i < win_size; ++i)
+//             for(auto win = windows.cbegin(); win != windows.cend(); ++win)
             {
-                const PerturbingPotential& pot = win->second;
-                for(auto step = win->first.cbegin(); step != win->first.cend(); ++step)
+                for(std::size_t j = 0; j < windows.at(i).first.size(); ++j)
+//                 for(auto step = win->first.cbegin(); step != win->first.cend(); ++step)
                 {
-                    const double numer = std::exp(-1e0 * beta_ * pot(*step));
-                    const double denom = calc_denominator(windows, expfs_prev, *step);
+                    const double numer = cash_expW.at(l).at(i).at(j);
+                    double denom = 0.0;
+//                     calc_denominator(windows, expfs_prev, *step);
+                    for(std::size_t k = 0; k < win_size; ++k)
+                    {
+                        denom += windows.at(k).first.size() * 
+                                 cash_expW.at(k).at(i).at(j) *
+                                 expfs_prev.at(k);
+                    }
                     *expf += numer / denom;
                 }
             }
             ++expf;
         }
+        for(auto iter = expfs.begin(); iter != expfs.end(); ++iter)
+            *iter = 1.0 / (*iter);
+
+        ++iteration_times;
+        std::cerr << "now " << iteration_times << "-th iteration" << std::endl;
+        for(auto iter = expfs.cbegin(); iter != expfs.cend(); ++iter)
+            std::cout << std::setprecision(6) << *iter << " ";
+        std::cout << std::endl;
+
         if(is_converged(expfs_prev, expfs))
+        {
             return expfs;
+        }
         else
-            expfs_prev.swap(expfs);
+        {
+            expfs_prev = expfs;
+        }
+
     }
     throw std::logic_error("never reach here");
 }
@@ -60,7 +123,7 @@ bool WhamSolver::is_converged(const std::vector<double>& f_prev,
     auto iter_prev = f_prev.cbegin();
     for(auto iter = f.cbegin(); iter != f.cend(); ++iter_prev, ++iter)
     {
-        if(std::abs(*iter - *iter_prev) > tolerance) return false;
+        if(std::abs((*iter - *iter_prev) / (*iter)) > tolerance) return false;
     }
     return true;
 }
