@@ -7,7 +7,6 @@ ProbabilityDensityFunction UnbiasSolver::unbias(const Trajectory& traj,
                                       const PerturbingPotential perturb,
                                       const ReactionCoordinate& rctcrd) const 
 {
-    const double beta = 1.0 / (this->temperature_ * kB);
     HistogramMaker histmaker(this->bins_);
     const auto range = histmaker.find_range(traj, rctcrd);
     histmaker.set_range(range);
@@ -20,7 +19,7 @@ ProbabilityDensityFunction UnbiasSolver::unbias(const Trajectory& traj,
     {
         const double x = rctcrd(*iter);
         const double W = perturb(*iter);
-        unbiased.at(x) += min_p * std::exp(beta * W);
+        unbiased.at(x) += min_p * std::exp(this->beta_ * W);
     }
 
     return unbiased;
