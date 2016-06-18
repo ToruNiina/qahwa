@@ -65,13 +65,14 @@ int main(int argc, char *argv[])
                 ReactionCoordinate rctcrd;
                 histmaker.set_range(histmaker.find_range(trajectory, rctcrd));
                 auto histogram = histmaker.make_histogram(trajectory, rctcrd);               
+                auto pdf = make_pdf(histogram);
 
                 std::ofstream ofs(input.get_as<std::string>(
                                       input.at("histogram","output")) +
                                   std::to_string(index) + ".dat");
                 if(!ofs.good())
                     throw std::runtime_error("file open error : qahwa_histogram.dat");
-                ofs << histogram;
+                ofs << pdf;
             }
             break;
         }
@@ -158,6 +159,7 @@ int main(int argc, char *argv[])
             {
                 temperature =
                     input.get_as<double>(input.at("wham","temperature"));
+                std::cerr << "temperature = " << temperature << std::endl;
             }
             catch(std::exception& exp)
             {
@@ -168,6 +170,7 @@ int main(int argc, char *argv[])
             {
                 bins =
                     input.get_as<std::size_t>(input.at("wham","bins"));
+                std::cerr << "bins  = " << bins << std::endl;
             }
             catch(std::exception& exp)
             {
@@ -202,6 +205,7 @@ int main(int argc, char *argv[])
                 windows.push_back(std::make_pair(std::move(trajectory), perturb));
             }
  
+            std::cerr << "trajectory reading end. start solving" << std::endl;
             auto parameter = solver.solve(windows);
 
             std::cout << "parameter solved" << std::endl;
@@ -212,12 +216,27 @@ int main(int argc, char *argv[])
 
             auto unbiased = solver.reconstruct(parameter, windows, rctcrd);
 
-            std::ofstream ofs(input.get_as<std::string>(
+            std::ofstream pdf(input.get_as<std::string>(
                                   input.at("wham","output")) +
-                              ".dat");
-            if(!ofs.good())
-                throw std::runtime_error("file open error : qahwa_histogram.dat");
-            ofs << unbiased;
+                              "_pdf.dat");
+            if(!pdf.good())
+                throw std::runtime_error("file open error : " + 
+                        input.get_as<std::string>(input.at("wham","output")) +
+                                         "_pdf.dat");
+            pdf << unbiased;
+            pdf.close();
+
+            auto potential = solver.make_pmf(unbiased);
+            std::ofstream pmf(input.get_as<std::string>(
+                                  input.at("wham","output")) +
+                              "_pmf.dat");
+            if(!pmf.good())
+                throw std::runtime_error("file open error : " +
+                        input.get_as<std::string>(input.at("wham","output")) +
+                                         "_pmf.dat");
+            pmf << potential;
+            pmf.close();
+
             break;
         }  
         default:
