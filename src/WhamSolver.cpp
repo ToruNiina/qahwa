@@ -56,14 +56,11 @@ std::vector<double> WhamSolver::solve(
         for(std::size_t l = 0; l < win_size; ++l)
         {
             for(std::size_t i = 0; i < win_size; ++i)
-//             for(auto win = windows.cbegin(); win != windows.cend(); ++win)
             {
                 for(std::size_t j = 0; j < windows.at(i).first.size(); ++j)
-//                 for(auto step = win->first.cbegin(); step != win->first.cend(); ++step)
                 {
                     const double numer = cash_expW.at(l).at(i).at(j);
                     double denom = 0.0;
-//                     calc_denominator(windows, expfs_prev, *step);
                     for(std::size_t k = 0; k < win_size; ++k)
                     {
                         denom += windows.at(k).first.size() * 
@@ -148,6 +145,39 @@ WhamSolver::reconstruct(const std::vector<double>& free_energy_parameter,
         }
     }
     end += (end - begin) * 1e-3;
+
+    // equation 7
+//     ProbabilityDensityFunction unbiased(this->bins_, begin, end);
+//
+//     HistogramMaker maker(this->bins_, begin, end);
+//     std::vector<ProbabilityDensityFunction> biased;
+//     biased.reserve(windows.size());
+//     for(auto iter = windows.cbegin(); iter != windows.cend(); ++iter)
+//     {
+//         biased.push_back(maker.make_prob_dens_func(iter->first, rctcrd));
+//     }
+//
+//     const double dx = (end - begin) / this->bins_;
+//     for(std::size_t index = 0; index < this->bins_; ++index)
+//     {
+//         const double x = begin + dx * (index + 0.5);
+//
+//         double numer = 0.0;
+//         for(std::size_t j = 0; j < windows.size(); ++j)
+//         {
+//             numer += windows.at(j).first.size() *
+//                 std::exp(-1.0 * this->beta_ * windows.at(j).second(x)) *
+//                 free_energy_parameter.at(j);
+//         }
+//
+//         double denom = 0.0;
+//         for(std::size_t i = 0; i < windows.size(); ++i)
+//         {
+//             denom += windows.at(i).first.size() * biased.at(i).at(x);
+//         }
+//
+//         unbiased.at(x) = denom / numer;
+//     }
 
     // reconst unbiased pdf(R) and project it into reaction coordinate
     ProbabilityDensityFunction unbiased(this->bins_, begin, end);
