@@ -7,6 +7,7 @@ The main purpose of Qahwa is calculating Potential of Mean Force(PMF)
 based on dcd files including umbrella sampling trajectory.
 
 The sample result is shown below.
+
 ![umbrella](http://10.1.1.222/gitlab/niina/Qahwa/raw/master/sample/umbrella_biased.png)
 
 Fig.1 : The umbrella sampling trajectory
