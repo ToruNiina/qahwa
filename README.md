@@ -4,9 +4,11 @@ Qahwa
 A tool for WHAM.
 
 Fig.1 : The umbrella sampling trajectory
+
 ![umbrella](sample/umbrella_biased.png)
 
 Fig.2 : The result of wham
+
 ![wham](sample/wham_result.png)
 
 ## Build
